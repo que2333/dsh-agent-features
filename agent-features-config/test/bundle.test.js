@@ -15,15 +15,15 @@ test('bundle mounts three independently manageable component packages', async ()
   assert.equal(manifest.dsh.client, undefined)
   assert.deepEqual(manifest.dependencies, {
     '@que2333/dsh-agent-config':
-      'git+https://github.com/que2333/dsh-agent-features.git#v1.2.0&path:/agent-config',
+      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-agent-config-2.2.1.tgz',
     '@que2333/dsh-session-delete':
-      'git+https://github.com/que2333/dsh-agent-features.git#v1.2.0&path:/session-delete',
+      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-session-delete-1.1.0.tgz',
     '@que2333/dsh-edit-message':
-      'git+https://github.com/que2333/dsh-agent-features.git#v1.2.0&path:/edit-message',
+      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-edit-message-1.2.1.tgz',
   })
   assert.equal(
-    Object.values(manifest.dependencies).some((spec) => spec.includes('/releases/download/')),
-    false,
+    Object.values(manifest.dependencies).every((spec) => spec.startsWith('https://raw.githubusercontent.com/')),
+    true,
   )
 
   assert.match(patch, /id: agent-config\s+name: '@que2333\/dsh-agent-config'/)
