@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "推理摘要与输出",
+    "description": "通过 Responses 原生参数配置推理摘要和输出详细程度。"
+  }
+}

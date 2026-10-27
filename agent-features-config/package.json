@@ -1,0 +1,35 @@
+{
+  "name": "@local/agent-features-config",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bundle for three independently toggleable Agent features: Responses summary/verbosity, archived-session management, and message editing.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test test/bundle.test.js"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@local/agent-config": "link:../agent-config",
+    "@local/session-delete": "link:../session-delete",
+    "@local/edit-message": "link:../edit-message"
+  }
+}

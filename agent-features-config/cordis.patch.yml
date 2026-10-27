@@ -1,0 +1,7 @@
+- insert:
+    - id: agent-config
+      name: '@local/agent-config'
+    - id: session-delete
+      name: '@local/session-delete'
+    - id: edit-message
+      name: '@local/edit-message'

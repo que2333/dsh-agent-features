@@ -1,0 +1,3 @@
+- insert:
+    - id: agent-config
+      name: '@local/agent-config'
