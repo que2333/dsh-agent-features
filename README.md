@@ -12,6 +12,12 @@
 https://raw.githubusercontent.com/que2333/dsh-agent-features/main/plugin-market.json
 ```
 
+如果当前网络无法访问 `raw.githubusercontent.com`，可改用 jsDelivr 镜像：
+
+```text
+https://cdn.jsdelivr.net/gh/que2333/dsh-agent-features@main/plugin-market.json
+```
+
 然后在“发现”中搜索 `Agent功能与配置` 并安装。安装后可在插件页分别启停三个组件。
 
 ### Git 安装
