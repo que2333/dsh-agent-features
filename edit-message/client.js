@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: '@local/edit-message',
+  id: '@que2333/dsh-edit-message',
   factory(require) {
     const React = require('react')
     const h = React.createElement
@@ -46,7 +46,7 @@ window.__ModuleLoader__.load({
       'clock.ymd': '{y}/{m}/{d}',
     }
 
-    const STYLE_TAG = '@local/edit-message/EditMessageRow.css'
+    const STYLE_TAG = '@que2333/dsh-edit-message/EditMessageRow.css'
     const CSS = `
 .dshem-row{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .dshem-actions{display:flex;align-items:center;gap:8px;height:calc(28px + var(--dsh-content-font-delta,0px))}
@@ -77,7 +77,7 @@ window.__ModuleLoader__.load({
       const existing = document.querySelector(`style[data-plugin-css=${JSON.stringify(STYLE_TAG)}]`)
       if (existing !== null) return () => {}
       const tag = document.createElement('style')
-      tag.dataset.plugin = '@local/edit-message'
+      tag.dataset.plugin = '@que2333/dsh-edit-message'
       tag.dataset.pluginCss = STYLE_TAG
       tag.textContent = CSS
       document.head.appendChild(tag)

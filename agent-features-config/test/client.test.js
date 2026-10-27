@@ -13,7 +13,7 @@ test('one client factory composes every merged UI contribution', async () => {
 
   await import(`${new URL('../client.js', import.meta.url).href}?merge-test`)
   assert.equal(loads.length, 1)
-  assert.equal(loads[0].id, '@local/agent-features-config')
+  assert.equal(loads[0].id, '@que2333/dsh-agent-features')
 
   class Component {
     constructor(props) {

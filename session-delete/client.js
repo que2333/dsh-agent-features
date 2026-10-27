@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: '@local/session-delete',
+  id: '@que2333/dsh-session-delete',
   factory(require) {
     const React = require('react')
     const h = React.createElement
@@ -57,7 +57,7 @@ window.__ModuleLoader__.load({
       'error.failed': 'Delete failed. Try again.',
     }
 
-    const STYLE_TAG = '@local/session-delete/ArchivedChats.css'
+    const STYLE_TAG = '@que2333/dsh-session-delete/ArchivedChats.css'
     const CSS = `
 .dsdel-page{display:flex;flex-direction:column;gap:16px;width:100%;padding-top:8px;font-size:13px;color:var(--dsw-alias-label-primary)}
 .dsdel-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
@@ -129,7 +129,7 @@ window.__ModuleLoader__.load({
       const existing = document.querySelector(`style[data-plugin-css=${JSON.stringify(STYLE_TAG)}]`)
       if (existing !== null) return () => {}
       const tag = document.createElement('style')
-      tag.dataset.plugin = '@local/session-delete'
+      tag.dataset.plugin = '@que2333/dsh-session-delete'
       tag.dataset.pluginCss = STYLE_TAG
       tag.textContent = CSS
       document.head.appendChild(tag)

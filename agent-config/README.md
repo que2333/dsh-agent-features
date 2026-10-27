@@ -1,4 +1,4 @@
-# @local/agent-config
+# @que2333/dsh-agent-config
 
 一个最小化的 DSH Responses 配置插件。2.2.1 版本只保留 Responses 原生参数控制和 `none` 模式下的本地显示兼容：
 

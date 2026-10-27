@@ -5,7 +5,7 @@ const NAMESPACE = 'agent-config'
 const LLM_ENTRY_ID = 'llm-pi-ai'
 const COMPLETIONS_API = 'openai-completions'
 const RESPONSES_API = 'openai-responses'
-const PAYLOAD_BRIDGE = Symbol.for('@local/agent-config/responses-payload-bridge')
+const PAYLOAD_BRIDGE = Symbol.for('@que2333/dsh-agent-config/responses-payload-bridge')
 
 const SUMMARY_LEVELS = new Set(['auto', 'concise', 'detailed', 'none'])
 const VERBOSITY_LEVELS = new Set(['default', 'low', 'medium', 'high'])

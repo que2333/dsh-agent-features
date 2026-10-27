@@ -1,9 +1,15 @@
 {
-  "name": "@local/agent-config",
+  "name": "@que2333/dsh-agent-config",
   "version": "2.2.1",
   "private": true,
   "type": "module",
   "description": "Native Codex-compatible Responses reasoning summary and output verbosity controls with automatic protocol migration.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/que2333/dsh-agent-features.git",
+    "directory": "agent-config"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",

@@ -1,7 +1,7 @@
 - insert:
     - id: agent-config
-      name: '@local/agent-config'
+      name: '@que2333/dsh-agent-config'
     - id: session-delete
-      name: '@local/session-delete'
+      name: '@que2333/dsh-session-delete'
     - id: edit-message
-      name: '@local/edit-message'
+      name: '@que2333/dsh-edit-message'

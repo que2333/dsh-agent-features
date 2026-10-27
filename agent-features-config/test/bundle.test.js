@@ -14,14 +14,17 @@ test('bundle mounts three independently manageable component packages', async ()
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(manifest.dsh.client, undefined)
   assert.deepEqual(manifest.dependencies, {
-    '@local/agent-config': 'link:../agent-config',
-    '@local/session-delete': 'link:../session-delete',
-    '@local/edit-message': 'link:../edit-message',
+    '@que2333/dsh-agent-config':
+      'https://github.com/que2333/dsh-agent-features/releases/download/v1.1.0/que2333-dsh-agent-config-2.2.1.tgz',
+    '@que2333/dsh-session-delete':
+      'https://github.com/que2333/dsh-agent-features/releases/download/v1.1.0/que2333-dsh-session-delete-1.1.0.tgz',
+    '@que2333/dsh-edit-message':
+      'https://github.com/que2333/dsh-agent-features/releases/download/v1.1.0/que2333-dsh-edit-message-1.2.1.tgz',
   })
 
-  assert.match(patch, /id: agent-config\s+name: '@local\/agent-config'/)
-  assert.match(patch, /id: session-delete\s+name: '@local\/session-delete'/)
-  assert.match(patch, /id: edit-message\s+name: '@local\/edit-message'/)
+  assert.match(patch, /id: agent-config\s+name: '@que2333\/dsh-agent-config'/)
+  assert.match(patch, /id: session-delete\s+name: '@que2333\/dsh-session-delete'/)
+  assert.match(patch, /id: edit-message\s+name: '@que2333\/dsh-edit-message'/)
 
   for (const component of components) {
     const componentManifest = JSON.parse(

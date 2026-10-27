@@ -1,10 +1,10 @@
 # Agent功能与配置
 
-`@local/agent-features-config` 是一个 DSH bundle，将以下三个本地插件显示在同一个插件页内，并允许分别启停：
+`@que2333/dsh-agent-features` 是一个 DSH bundle，将以下三个本地插件显示在同一个插件页内，并允许分别启停：
 
-- `@local/agent-config`：Responses 推理摘要与输出详细程度配置，并在启用时把当前默认 OpenAI 兼容 provider 从 Chat Completions 切换到 Responses。
-- `@local/session-delete`：设置中的“已归档的聊天”，支持取消归档、删除和全部删除。
-- `@local/edit-message`：对话中的用户消息编辑，保留原附件并在同一会话内回退后重发。
+- `@que2333/dsh-agent-config`：Responses 推理摘要与输出详细程度配置，并在启用时把当前默认 OpenAI 兼容 provider 从 Chat Completions 切换到 Responses。
+- `@que2333/dsh-session-delete`：设置中的“已归档的聊天”，支持取消归档、删除和全部删除。
+- `@que2333/dsh-edit-message`：对话中的用户消息编辑，保留原附件并在同一会话内回退后重发。
 
 这三个组件在插件管理器中各有独立开关。关闭其中一个不会停止另外两个。
 

@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: '@local/agent-config',
+  id: '@que2333/dsh-agent-config',
   factory(require) {
     const React = require('react')
     const { createPortal } = require('react-dom')
@@ -79,7 +79,7 @@ window.__ModuleLoader__.load({
     const MENU_MIN_WIDTH = 260
     const MENU_MAX_WIDTH = 340
 
-    const STYLE_TAG = '@local/agent-config/AgentConfig.css'
+    const STYLE_TAG = '@que2333/dsh-agent-config/AgentConfig.css'
     const CSS = `
 .dscfg-page{display:flex;flex-direction:column;gap:22px;width:100%;padding-top:8px;color:var(--dsw-alias-label-primary);font-size:13px}
 .dscfg-header{display:flex;flex-direction:column;gap:6px}
@@ -122,7 +122,7 @@ window.__ModuleLoader__.load({
       const existing = document.querySelector(selector)
       if (existing !== null) return () => {}
       const tag = document.createElement('style')
-      tag.dataset.plugin = '@local/agent-config'
+      tag.dataset.plugin = '@que2333/dsh-agent-config'
       tag.dataset.pluginCss = STYLE_TAG
       tag.textContent = CSS
       document.head.appendChild(tag)

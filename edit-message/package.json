@@ -1,9 +1,15 @@
 {
-  "name": "@local/edit-message",
+  "name": "@que2333/dsh-edit-message",
   "version": "1.2.1",
   "private": true,
   "type": "module",
   "description": "Edits any user turn in place by rewinding the same Session log and resending with original attachments.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/que2333/dsh-agent-features.git",
+    "directory": "edit-message"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
