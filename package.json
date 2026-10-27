@@ -1,16 +1,70 @@
 {
-  "name": "dsh-agent-features",
-  "version": "1.1.0",
+  "name": "@que2333/dsh-agent-features",
+  "version": "1.4.0",
   "private": true,
-  "description": "Codex-style agent features and configuration for DeepSeek Harness.",
+  "type": "module",
+  "description": "Codex-style Agent features and configuration for DeepSeek Harness.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/que2333/dsh-agent-features.git"
   },
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./agent-config": "./agent-config/index.js",
+    "./session-delete": "./session-delete/index.js",
+    "./edit-message": "./edit-message/index.js",
+    "./agent-config/locale/*.json": "./agent-config/locale/*.json",
+    "./session-delete/locale/*.json": "./session-delete/locale/*.json",
+    "./edit-message/locale/*.json": "./edit-message/locale/*.json",
+    "./agent-config/icon": "./agent-config/icon.svg",
+    "./session-delete/icon": "./session-delete/icon.svg",
+    "./edit-message/icon": "./edit-message/icon.svg",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "agent-config/index.js",
+    "agent-config/client.js",
+    "agent-config/cordis.patch.yml",
+    "agent-config/locale/*.json",
+    "agent-config/icon.svg",
+    "agent-config/package.json",
+    "agent-config/README.md",
+    "session-delete/index.js",
+    "session-delete/client.js",
+    "session-delete/cordis.patch.yml",
+    "session-delete/locale/*.json",
+    "session-delete/icon.svg",
+    "session-delete/package.json",
+    "session-delete/README.md",
+    "edit-message/index.js",
+    "edit-message/client.js",
+    "edit-message/cordis.patch.yml",
+    "edit-message/locale/*.json",
+    "edit-message/icon.svg",
+    "edit-message/package.json",
+    "edit-message/README.md",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.18.5"
+  },
   "packageManager": "pnpm@11.28.5",
   "scripts": {
     "sync-bundle": "node scripts/sync-bundle-components.mjs",
-    "test": "pnpm -r --if-present test"
+    "test": "node agent-config/test-transform.mjs && node --test test/*.test.js edit-message/test/*.test.js && pnpm -r --if-present test"
   }
 }

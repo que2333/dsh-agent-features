@@ -1,0 +1,7 @@
+- insert:
+    - id: agent-config
+      name: '@que2333/dsh-agent-features/agent-config'
+    - id: session-delete
+      name: '@que2333/dsh-agent-features/session-delete'
+    - id: edit-message
+      name: '@que2333/dsh-agent-features/edit-message'

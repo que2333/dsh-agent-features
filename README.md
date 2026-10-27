@@ -22,15 +22,15 @@ https://cdn.jsdelivr.net/gh/que2333/dsh-agent-features@main/plugin-market.json
 
 ### Git 安装
 
-仓库同时可作为 DSH 的 Git 子目录包安装：
+仓库根目录本身就是可直接安装的 DSH bundle：
 
 ```text
-git+https://github.com/que2333/dsh-agent-features.git#<commit>&path:/agent-features-config
+https://github.com/que2333/dsh-agent-features
 ```
 
-市场索引会自动使用与发布版本对应的固定 commit，避免分支更新造成版本漂移。三个组件作为
-总包内的正式子包随 Git 包一起分发，安装时不需要再从 GitHub Release、Raw URL、Git
-子目录或 npm registry 安装组件子依赖。
+不需要填写 `&path:` 子目录。市场索引会自动使用与发布版本对应的固定 commit，避免分支
+更新造成版本漂移。三个组件随根包一起分发，安装时不需要再从 GitHub Release、Raw URL、
+Git 子目录或 npm registry 安装组件子依赖。
 
 ## 功能
 
@@ -47,7 +47,10 @@ git+https://github.com/que2333/dsh-agent-features.git#<commit>&path:/agent-featu
 | `@que2333/dsh-session-delete` | 已归档会话管理 |
 | `@que2333/dsh-edit-message` | 用户消息编辑与重发 |
 
-`agent-features-config` 通过 `cordis.patch.yml` 挂载另外三个组件；每个组件保留独立开关。
+根目录的 `cordis.patch.yml` 挂载三个组件；每个组件保留独立开关。
+
+`agent-features-config` 子目录只保留给旧版固定 commit 安装兼容，不再作为仓库的
+workspace 包，也不是新的安装入口。
 
 ## 兼容性
 
@@ -69,8 +72,7 @@ pnpm test
 ```powershell
 node --check agent-config/index.js
 node --check agent-config/client.js
-node --check agent-features-config/index.js
-node --check agent-features-config/client.js
+node --check index.js
 node --check edit-message/index.js
 node --check edit-message/client.js
 node --check session-delete/index.js
