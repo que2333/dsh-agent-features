@@ -14,25 +14,17 @@ test('bundle mounts three independently manageable component packages', async ()
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(manifest.dsh.client, undefined)
   assert.deepEqual(manifest.dependencies, {
-    '@que2333/dsh-agent-config':
-      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-agent-config-2.2.1.tgz',
-    '@que2333/dsh-session-delete':
-      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-session-delete-1.1.0.tgz',
-    '@que2333/dsh-edit-message':
-      'https://raw.githubusercontent.com/que2333/dsh-agent-features/v1.2.1/dist/que2333-dsh-edit-message-1.2.1.tgz',
+    '@deepseek-ai/schemastery': '~3.18.5',
   })
-  assert.equal(
-    Object.values(manifest.dependencies).every((spec) => spec.startsWith('https://raw.githubusercontent.com/')),
-    true,
-  )
+  assert.equal(manifest.bundledDependencies, undefined)
 
-  assert.match(patch, /id: agent-config\s+name: '@que2333\/dsh-agent-config'/)
-  assert.match(patch, /id: session-delete\s+name: '@que2333\/dsh-session-delete'/)
-  assert.match(patch, /id: edit-message\s+name: '@que2333\/dsh-edit-message'/)
+  assert.match(patch, /id: agent-config\s+name: '@que2333\/dsh-agent-features\/agent-config'/)
+  assert.match(patch, /id: session-delete\s+name: '@que2333\/dsh-agent-features\/session-delete'/)
+  assert.match(patch, /id: edit-message\s+name: '@que2333\/dsh-agent-features\/edit-message'/)
 
   for (const component of components) {
     const componentManifest = JSON.parse(
-      await readFile(path.resolve(root, '..', component, 'package.json'), 'utf8'),
+      await readFile(path.resolve(root, 'components', component, 'package.json'), 'utf8'),
     )
     assert.equal(componentManifest.dsh.bundle, undefined)
     assert.notEqual(componentManifest.dsh.client, undefined)

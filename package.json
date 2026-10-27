@@ -10,6 +10,7 @@
   },
   "packageManager": "pnpm@11.28.5",
   "scripts": {
+    "sync-bundle": "node scripts/sync-bundle-components.mjs",
     "test": "pnpm -r --if-present test"
   }
 }

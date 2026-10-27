@@ -1,0 +1,3 @@
+- insert:
+    - id: agent-config
+      name: '@que2333/dsh-agent-config'

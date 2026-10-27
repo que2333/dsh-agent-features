@@ -1,0 +1,40 @@
+{
+  "name": "@que2333/dsh-agent-config",
+  "version": "2.2.1",
+  "private": true,
+  "type": "module",
+  "description": "Native Codex-compatible Responses reasoning summary and output verbosity controls with automatic protocol migration.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/que2333/dsh-agent-features.git",
+    "directory": "agent-config"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-settings-general"
+      ]
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.18.5"
+  }
+}

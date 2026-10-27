@@ -1,0 +1,3 @@
+- insert:
+    - id: edit-message
+      name: '@que2333/dsh-edit-message'

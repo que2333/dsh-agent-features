@@ -22,8 +22,9 @@ https://raw.githubusercontent.com/que2333/dsh-agent-features/main/plugin-market.
 git+https://github.com/que2333/dsh-agent-features.git#<commit>&path:/agent-features-config
 ```
 
-市场索引会自动使用与发布版本对应的固定 commit，避免分支更新造成版本漂移。三个组件包放在
-仓库的 `dist/`，总包通过固定 tag 的 Raw URL 安装，不依赖 GitHub Release 资产。
+市场索引会自动使用与发布版本对应的固定 commit，避免分支更新造成版本漂移。三个组件作为
+总包内的正式子包随 Git 包一起分发，安装时不需要再从 GitHub Release、Raw URL、Git
+子目录或 npm registry 安装组件子依赖。
 
 ## 功能
 
