@@ -81,17 +81,17 @@
           "message-editing"
         ],
         "sortKeys": {
-          "published": 1793097648
+          "published": 1793098646
         }
       },
       "versions": [
         {
-          "version": "1.1.0",
-          "publishTimestamp": 1793097648,
+          "version": "1.2.0",
+          "publishTimestamp": 1793098646,
           "source": {
             "type": "git",
             "url": "https://github.com/que2333/dsh-agent-features",
-            "commit": "6b584362930cea6be37b0dea2cd3f43edc75add7",
+            "commit": "133ae27fb483f1e33e553b0d31df7700ceb493df",
             "path": "agent-features-config"
           }
         }
