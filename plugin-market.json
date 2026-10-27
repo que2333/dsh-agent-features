@@ -61,8 +61,7 @@
       "author": "que2333",
       "homepage": "https://github.com/que2333/dsh-agent-features",
       "repository": {
-        "url": "https://github.com/que2333/dsh-agent-features",
-        "directory": "agent-features-config"
+        "url": "https://github.com/que2333/dsh-agent-features"
       },
       "metadata": {
         "category": "agent-tools",
@@ -81,18 +80,17 @@
           "message-editing"
         ],
         "sortKeys": {
-          "published": 1793099135
+          "published": 1793102371
         }
       },
       "versions": [
         {
-          "version": "1.3.0",
-          "publishTimestamp": 1793099135,
+          "version": "1.4.0",
+          "publishTimestamp": 1793102371,
           "source": {
             "type": "git",
             "url": "https://github.com/que2333/dsh-agent-features",
-            "commit": "ab3cfcc007c97148134ab01b5299a9c10dd64cb2",
-            "path": "agent-features-config"
+            "commit": "f4e84ea7b0b1149c2f0328ec0d0fade4c89e8828"
           }
         }
       ]
