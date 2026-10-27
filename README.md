@@ -22,7 +22,8 @@ https://raw.githubusercontent.com/que2333/dsh-agent-features/main/plugin-market.
 git+https://github.com/que2333/dsh-agent-features.git#<commit>&path:/agent-features-config
 ```
 
-市场索引会自动使用与 `v1.1.0` 对应的固定 commit，避免分支更新造成版本漂移。
+市场索引会自动使用与发布版本对应的固定 commit，避免分支更新造成版本漂移。总包通过同一
+Git tag 安装三个组件子目录，不依赖 GitHub Release 资产的额外下载。
 
 ## 功能
 
