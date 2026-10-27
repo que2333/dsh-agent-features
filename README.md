@@ -47,7 +47,9 @@ Git 子目录或 npm registry 安装组件子依赖。
 | `@que2333/dsh-session-delete` | 已归档会话管理 |
 | `@que2333/dsh-edit-message` | 用户消息编辑与重发 |
 
-根目录的 `cordis.patch.yml` 挂载三个组件；每个组件保留独立开关。
+根目录的 `cordis.patch.yml` 挂载三个宿主组件，并额外挂载根包的聚合浏览器入口。
+DSH 的客户端扫描器只识别完整包名，因此前端不能直接挂在
+`@que2333/dsh-agent-features/...` 子路径上。三个宿主组件仍分别保留开关。
 
 `agent-features-config` 子目录只保留给旧版固定 commit 安装兼容，不再作为仓库的
 workspace 包，也不是新的安装入口。
@@ -77,6 +79,7 @@ node --check edit-message/index.js
 node --check edit-message/client.js
 node --check session-delete/index.js
 node --check session-delete/client.js
+node scripts/build-root-client.mjs
 ```
 
 ## 目录说明

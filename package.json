@@ -1,6 +1,6 @@
 {
   "name": "@que2333/dsh-agent-features",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "type": "module",
   "description": "Codex-style Agent features and configuration for DeepSeek Harness.",
@@ -15,6 +15,7 @@
     "./agent-config": "./agent-config/index.js",
     "./session-delete": "./session-delete/index.js",
     "./edit-message": "./edit-message/index.js",
+    "./client": "./client.js",
     "./agent-config/locale/*.json": "./agent-config/locale/*.json",
     "./session-delete/locale/*.json": "./session-delete/locale/*.json",
     "./edit-message/locale/*.json": "./edit-message/locale/*.json",
@@ -27,6 +28,7 @@
   },
   "files": [
     "index.js",
+    "client.js",
     "cordis.patch.yml",
     "agent-config/index.js",
     "agent-config/client.js",
@@ -57,6 +59,17 @@
     "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-settings-general",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-chat",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
     }
   },
   "dependencies": {
@@ -64,6 +77,7 @@
   },
   "packageManager": "pnpm@11.28.5",
   "scripts": {
+    "build-client": "node scripts/build-root-client.mjs",
     "sync-bundle": "node scripts/sync-bundle-components.mjs",
     "test": "node agent-config/test-transform.mjs && node --test test/*.test.js edit-message/test/*.test.js && pnpm -r --if-present test"
   }

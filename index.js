@@ -1,3 +1,5 @@
-// This package is a bundle. Its Cordis patch mounts the three component
-// packages, each with its own host and client halves.
-export {}
+// The root host entry is intentionally inert. It gives the client-module
+// scanner an exact package row for the aggregate browser bundle.
+export const inject = []
+
+export function apply() {}

@@ -12,12 +12,26 @@ test('the repository root is directly installable as a DSH bundle', async () => 
   const components = ['agent-config', 'session-delete', 'edit-message']
 
   assert.equal(manifest.name, '@que2333/dsh-agent-features')
-  assert.equal(manifest.version, '1.4.0')
+  assert.equal(manifest.version, '1.4.1')
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
-  assert.equal(manifest.dsh.client, undefined)
+  assert.equal(manifest.exports['./client'], './client.js')
+  assert.equal(manifest.dsh.client.platform, 'web')
+  assert.equal(manifest.dsh.client.immediately, true)
+  assert.deepEqual(manifest.dsh.client.inject, [
+    '@deepseek-ai/dsh-client-ui-settings',
+    '@deepseek-ai/dsh-client-ui-settings-general',
+    '@deepseek-ai/dsh-client-ui-workspace',
+    '@deepseek-ai/dsh-client-ui-chat',
+    '@deepseek-ai/dsh-client-ui-conversation',
+  ])
   assert.deepEqual(manifest.dependencies, {
     '@deepseek-ai/schemastery': '~3.18.5',
   })
+
+  assert.match(
+    patch,
+    /id: agent-features-client\s+name: '@que2333\/dsh-agent-features'/,
+  )
 
   for (const component of components) {
     assert.equal(manifest.exports[`./${component}`], `./${component}/index.js`)
@@ -42,6 +56,8 @@ test('the repository root is directly installable as a DSH bundle', async () => 
     assert.equal(componentManifest.dsh.client.platform, 'web')
     assert.equal(componentManifest.exports['./client'], './client.js')
   }
+
+  await access(path.join(root, 'client.js'))
 
   for (const file of ['locale/en.json', 'locale/zh.json', 'icon.svg']) {
     await access(path.join(root, file))
