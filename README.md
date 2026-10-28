@@ -1,6 +1,6 @@
 # DSH Agent Features
 
-为 DeepSeek Harness 提供接近 Codex 的 Agent 功能与配置，由一个管理入口和三个可独立启停的组件组成。
+为 DeepSeek Harness 提供接近 Codex 的 Agent 功能与配置，包含三个可独立启停的组件。
 
 ## 安装
 
@@ -18,7 +18,8 @@ https://raw.githubusercontent.com/que2333/dsh-agent-features/main/plugin-market.
 https://cdn.jsdelivr.net/gh/que2333/dsh-agent-features@main/plugin-market.json
 ```
 
-然后在“发现”中搜索 `Agent功能与配置` 并安装。安装后可在插件页分别启停三个组件。
+然后在“发现”中搜索 `Agent功能与配置` 并安装。安装后插件页只显示三个组件，
+可分别启停。
 
 ### Git 安装
 
@@ -29,8 +30,8 @@ https://github.com/que2333/dsh-agent-features
 ```
 
 不需要填写 `&path:` 子目录。市场索引会自动使用与发布版本对应的固定 commit，避免分支
-更新造成版本漂移。三个组件随根包一起分发，安装时不需要再从 GitHub Release、Raw URL、
-Git 子目录或 npm registry 安装组件子依赖。
+更新造成版本漂移。三个组件作为根包的 `bundleDependencies` 随同一次 Git 安装分发；
+不需要手动安装 Git 子目录、GitHub Release 资产或 npm 包。
 
 ## 功能
 
@@ -42,14 +43,14 @@ Git 子目录或 npm registry 安装组件子依赖。
 
 | 包 | 作用 |
 | --- | --- |
-| `@que2333/dsh-agent-features` | 统一插件入口与“Agent功能与配置”页面 |
+| `@que2333/dsh-agent-features` | 根目录安装入口与 Bundle 清单 |
 | `@que2333/dsh-agent-config` | Responses 推理摘要与输出详细程度 |
 | `@que2333/dsh-session-delete` | 已归档会话管理 |
 | `@que2333/dsh-edit-message` | 用户消息编辑与重发 |
 
-根目录的 `cordis.patch.yml` 挂载三个宿主组件，并额外挂载根包的聚合浏览器入口。
-DSH 的客户端扫描器只识别完整包名，因此前端不能直接挂在
-`@que2333/dsh-agent-features/...` 子路径上。三个宿主组件仍分别保留开关。
+根包的 `cordis.patch.yml` 只挂载三个完整组件包。它们随根包一起分发，并可由 DSH 的
+Profile 依赖递归解析，因此宿主与客户端扫描器都能读取其 `dsh.client`。根包自身没有
+客户端入口，不会在插件页额外显示“Agent功能与配置”组件。
 
 `agent-features-config` 子目录只保留给旧版固定 commit 安装兼容，不再作为仓库的
 workspace 包，也不是新的安装入口。
@@ -66,6 +67,7 @@ workspace 包，也不是新的安装入口。
 
 ```powershell
 pnpm install
+pnpm sync-bundle
 pnpm test
 ```
 
@@ -79,7 +81,6 @@ node --check edit-message/index.js
 node --check edit-message/client.js
 node --check session-delete/index.js
 node --check session-delete/client.js
-node scripts/build-root-client.mjs
 ```
 
 ## 目录说明

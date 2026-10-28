@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Edit Message",
+    "description": "Adds an edit button to user turns. Sending rewinds the same Session to that turn, keeps its attachments, and generates a new reply."
+  }
+}

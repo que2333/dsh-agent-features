@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@que2333/dsh-agent-config': link:agent-config
+  '@que2333/dsh-edit-message': link:edit-message
+  '@que2333/dsh-session-delete': link:session-delete
+
 importers:
 
   .:
@@ -11,6 +16,15 @@ importers:
       '@deepseek-ai/schemastery':
         specifier: ~3.18.5
         version: 3.18.5
+      '@que2333/dsh-agent-config':
+        specifier: link:agent-config
+        version: link:agent-config
+      '@que2333/dsh-edit-message':
+        specifier: link:edit-message
+        version: link:edit-message
+      '@que2333/dsh-session-delete':
+        specifier: link:session-delete
+        version: link:session-delete
 
   agent-config:
     dependencies:

@@ -2,3 +2,8 @@ packages:
   - agent-config
   - edit-message
   - session-delete
+
+overrides:
+  '@que2333/dsh-agent-config': link:agent-config
+  '@que2333/dsh-edit-message': link:edit-message
+  '@que2333/dsh-session-delete': link:session-delete

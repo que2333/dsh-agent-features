@@ -1,4 +1,8 @@
-node_modules/
+**/node_modules/*
+!/node_modules/@que2333/
+!/node_modules/@que2333/dsh-agent-config/
+!/node_modules/@que2333/dsh-edit-message/
+!/node_modules/@que2333/dsh-session-delete/
 *.tgz
 !dist/*.tgz
 *.log
