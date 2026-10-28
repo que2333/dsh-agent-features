@@ -85,6 +85,15 @@
       },
       "versions": [
         {
+          "version": "1.5.0",
+          "publishTimestamp": 1793159088,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/que2333/dsh-agent-features",
+            "commit": "b9c0b479a5a13a39a9621452592a8718061e2b41"
+          }
+        },
+        {
           "version": "1.4.1",
           "publishTimestamp": 1793103987,
           "source": {
