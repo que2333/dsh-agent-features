@@ -37,7 +37,7 @@ Chat Completions、Anthropic Messages、Gemini 等协议没有这两个 Response
 
 ## 自动迁移协议
 
-插件启用后，会把**当前默认 provider** 从 `openai-completions` 自动切换为 `openai-responses`。模型、地址、请求头和凭据保持不变；其他非 OpenAI 兼容协议不会被错误转换。
+插件启用后，会把**当前默认 provider** 从 `openai-completions` 自动切换为 `openai-responses`。模型、地址、请求头和凭据保持不变；其他非 OpenAI 兼容协议不会被错误转换。Magpie 等外部工具随后重写 profile 时，插件会在配置变化后重新执行同一迁移，避免实际请求退回 Chat Completions。
 
 ## 配置重置
 

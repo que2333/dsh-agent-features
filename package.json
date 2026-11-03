@@ -1,6 +1,6 @@
 {
   "name": "@que2333/dsh-agent-features",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "type": "module",
   "description": "Codex-style Agent features and configuration for DeepSeek Harness.",

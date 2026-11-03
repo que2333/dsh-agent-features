@@ -369,16 +369,52 @@ export function apply(ctx, config) {
   ctx.inject(['configEditor', 'agentDefaultModel'], (child) => {
     child.effect(() => {
       let active = true
+      let timer
+      let migrating = false
+
+      const migrate = () => {
+        if (!active || migrating) return
+        migrating = true
+        ensureDefaultProviderResponses(child.configEditor, child.agentDefaultModel)
+          .catch((error) => {
+            child.logger.warn('agent-config: could not migrate the default provider to Responses: %o', error)
+          })
+          .finally(() => {
+            migrating = false
+          })
+      }
+
       // Let activation finish before a migration can trigger a Loader reload.
-      const timer = setTimeout(() => {
+      const schedule = () => {
         if (!active) return
-        ensureDefaultProviderResponses(child.configEditor, child.agentDefaultModel).catch((error) => {
-          child.logger.warn('agent-config: could not migrate the default provider to Responses: %o', error)
-        })
-      }, 0)
+        clearTimeout(timer)
+        timer = setTimeout(migrate, 0)
+      }
+
+      schedule()
+
+      // Magpie and other profile writers can replace the provider block after
+      // startup. Re-apply the idempotent migration whenever Loader observes a
+      // configuration update, with a slow guard for writers outside Loader.
+      const onUpdate = (_config, _noSave, next) => {
+        const result = next()
+        schedule()
+        return result
+      }
+      const offUpdate = child.on('internal/update', onUpdate, { global: true })
+      const offVolatile = child.on('loader/volatile-update', schedule, { global: true })
+      const offConfig = child.on('loader/config-update', schedule, { global: true })
+      const offEntry = child.on('loader/entry-init', schedule, { global: true })
+      const guard = setInterval(migrate, 2000)
+
       return () => {
         active = false
         clearTimeout(timer)
+        clearInterval(guard)
+        offUpdate()
+        offVolatile()
+        offConfig()
+        offEntry()
       }
     }, 'agent-config: default Responses protocol')
   })

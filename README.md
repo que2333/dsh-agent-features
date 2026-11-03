@@ -35,7 +35,7 @@ https://github.com/que2333/dsh-agent-features
 
 ## 功能
 
-- **推理摘要与输出**：对 Responses 协议设置原生 `reasoning.summary` 和 `text.verbosity`，不追加提示词，也不额外请求主模型。插件启用时会把兼容的 OpenAI Chat Completions Provider 切换为 Responses。
+- **推理摘要与输出**：对 Responses 协议设置原生 `reasoning.summary` 和 `text.verbosity`，不追加提示词，也不额外请求主模型。插件启用时会把兼容的 OpenAI Chat Completions Provider 切换为 Responses；Magpie 等外部工具重写配置后，插件也会自动恢复 Responses。
 - **已归档的聊天**：在设置中查看已归档会话，支持取消归档、永久删除和全部删除。
 - **编辑消息**：编辑用户历史消息，在保留原附件的情况下回退同一会话并重新发送。
 
