@@ -1,12 +1,12 @@
 {
   "format": 1,
   "title": {
-    "zh": "DSH Agent 功能插件",
-    "en": "DSH Agent Features"
+    "zh": "DSH Agent 会话工具",
+    "en": "DSH Agent Session Tools"
   },
   "description": {
-    "zh": "接近 Codex 的推理摘要、输出详细程度、归档会话管理和消息编辑功能。",
-    "en": "Codex-style reasoning summaries, output verbosity, archived-session management, and message editing for DeepSeek Harness."
+    "zh": "归档会话管理和消息编辑功能。",
+    "en": "Archived-session management and message editing for DeepSeek Harness."
   },
   "metadata": {
     "categories": {
@@ -18,12 +18,6 @@
       }
     },
     "labels": {
-      "responses": {
-        "title": {
-          "zh": "Responses",
-          "en": "Responses"
-        }
-      },
       "session-management": {
         "title": {
           "zh": "会话管理",
@@ -51,12 +45,12 @@
     {
       "name": "@que2333/dsh-agent-features",
       "title": {
-        "zh": "Agent功能与配置",
-        "en": "Agent Features & Configuration"
+        "zh": "Agent功能",
+        "en": "Agent Features"
       },
       "description": {
-        "zh": "统一入口包含推理摘要与输出详细程度、已归档聊天和消息编辑，三个组件可独立启停。",
-        "en": "One installable bundle with independently toggleable reasoning summary/verbosity, archived chats, and message editing."
+        "zh": "统一入口包含已归档聊天和消息编辑，两个组件可独立启停。",
+        "en": "One installable bundle with independently toggleable archived chats and message editing."
       },
       "author": "que2333",
       "homepage": "https://github.com/que2333/dsh-agent-features",
@@ -69,21 +63,27 @@
           "codex",
           "deepseek",
           "deepseek harness",
-          "reasoning summary",
-          "verbosity",
           "archived sessions",
           "edit message"
         ],
         "labels": [
-          "responses",
           "session-management",
           "message-editing"
         ],
         "sortKeys": {
-          "published": 1793703889
+          "published": 1794281199
         }
       },
       "versions": [
+        {
+          "version": "1.6.0",
+          "publishTimestamp": 1794281199,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/que2333/dsh-agent-features",
+            "commit": "80b96a906fd7b062785c08e9dcad962550053c0d"
+          }
+        },
         {
           "version": "1.5.1",
           "publishTimestamp": 1793703889,
