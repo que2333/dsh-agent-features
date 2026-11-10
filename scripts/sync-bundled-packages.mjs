@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const components = new Map([
-  ['agent-config', '@que2333/dsh-agent-config'],
   ['session-delete', '@que2333/dsh-session-delete'],
   ['edit-message', '@que2333/dsh-edit-message'],
 ])

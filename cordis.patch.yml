@@ -1,6 +1,4 @@
 - insert:
-    - id: agent-config
-      name: '@que2333/dsh-agent-config'
     - id: session-delete
       name: '@que2333/dsh-session-delete'
     - id: edit-message

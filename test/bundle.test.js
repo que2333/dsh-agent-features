@@ -9,21 +9,20 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 test('the repository root is directly installable as a DSH bundle', async () => {
   const manifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'))
   const patch = await readFile(path.join(root, 'cordis.patch.yml'), 'utf8')
-  const components = ['agent-config', 'session-delete', 'edit-message']
+  const components = ['session-delete', 'edit-message']
   const componentPackages = {
-    'agent-config': '@que2333/dsh-agent-config',
     'session-delete': '@que2333/dsh-session-delete',
     'edit-message': '@que2333/dsh-edit-message',
   }
 
   assert.equal(manifest.name, '@que2333/dsh-agent-features')
-  assert.equal(manifest.version, '1.5.1')
+  assert.equal(manifest.version, '1.6.0')
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(manifest.exports['./client'], undefined)
+  assert.equal(manifest.exports['./agent-config'], undefined)
   assert.equal(manifest.dsh.client, undefined)
-  assert.equal(manifest.dependencies['@deepseek-ai/schemastery'], '~3.18.5')
+  assert.equal(manifest.dependencies['@que2333/dsh-agent-config'], undefined)
   assert.deepEqual(manifest.bundleDependencies, [
-    '@que2333/dsh-agent-config',
     '@que2333/dsh-edit-message',
     '@que2333/dsh-session-delete',
   ])
@@ -80,5 +79,7 @@ test('the repository root is directly installable as a DSH bundle', async () => 
     await access(path.join(root, file))
   }
 
+  await assert.rejects(access(path.join(root, 'agent-config')))
+  await assert.rejects(access(path.join(root, 'agent-features-config')))
   await assert.rejects(access(path.join(root, 'client.js')))
 })
