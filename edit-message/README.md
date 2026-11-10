@@ -46,6 +46,11 @@ if recovery itself fails.
   in-place resync fails.
 - Attachments are read from the original durable message by the Host, so the browser does
   not need to upload them again.
+- Sending an edit preserves the Session's current provider, model, and reasoning effort.
+  The Host carries the latest confirmed selection (or the latest used model if no
+  selection is pending) into the rewound log before resuming the Agent. A pending
+  switch survives a late request from the old model; default reasoning effort stays
+  implicit. Rewinding message history therefore does not rewind the model picker.
 - The inline row reuses the shipped `conversation.chat.user.content` Factory, so text,
   images, files, and reference summaries render as before.
 - The action is shown only when the current client allows `session/fork`, matching the

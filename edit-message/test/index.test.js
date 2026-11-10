@@ -224,13 +224,14 @@ async function makeHarness({
 
   apply(ctx)
 
-  async function request(body) {
+  async function request(body, headers = {}) {
     const req = Readable.from([Buffer.from(JSON.stringify(body))])
     req.method = 'POST'
     req.headers = {
       'content-type': 'application/json',
       'x-dsh-edit-message': '1',
       origin: 'http://127.0.0.1:59939',
+      ...headers,
     }
     let status = 0
     let responseBody
@@ -374,6 +375,102 @@ test('rejects a stale message identity before changing the session', async () =>
 
     assert.equal(response.status, 400)
     assert.deepEqual(response.body, { ok: false, code: 'STALE' })
+    assert.equal(harness.followed, undefined)
+    assert.equal(await readFile(harness.logPath, 'utf8'), 'original-log')
+  } finally {
+    await harness.cleanup()
+  }
+})
+
+const OLD_SELECTION = { provider: 'old-provider', model: 'old-model', reasoningEffort: 'high' }
+const NEW_SELECTION = { provider: 'new-provider', model: 'new-model', reasoningEffort: 'low' }
+const header = (config, adapterDefaults) => ({
+  type: 'request/header', data: { header: { config, ...(adapterDefaults ? { adapterDefaults } : {}) } },
+})
+const select = (data) => ({ type: 'model/selection', data })
+
+for (const scenario of [
+  { name: 'keeps the newly selected provider, model and effort', tail: [select(NEW_SELECTION)], expected: NEW_SELECTION },
+  { name: 'keeps the latest used model when its selection was consumed', tail: [select(NEW_SELECTION), header(NEW_SELECTION)], expected: NEW_SELECTION },
+  { name: 'does not let a late old-model request consume a pending new selection', tail: [select(NEW_SELECTION), header(OLD_SELECTION)], expected: NEW_SELECTION },
+  { name: 'uses the latest of multiple model changes', tail: [select(NEW_SELECTION), select({ provider: 'third', model: 'third-model' })], expected: { provider: 'third', model: 'third-model' } },
+  { name: 'clears the old explicit reasoning effort when the new selection omits it', tail: [select({ provider: 'new-provider', model: 'new-model' })], expected: { provider: 'new-provider', model: 'new-model' } },
+  { name: 'keeps an effort-only change on the same route', tail: [select({ ...OLD_SELECTION, reasoningEffort: 'low' })], expected: { ...OLD_SELECTION, reasoningEffort: 'low' } },
+  { name: 'keeps adapter-default effort implicit when using the last header', tail: [header(NEW_SELECTION, { reasoningEffort: true })], expected: { provider: 'new-provider', model: 'new-model' } },
+  { name: 'does not reset an unchanged route to the deployment default', tail: [], expected: OLD_SELECTION },
+]) {
+  test(scenario.name, async () => {
+    const events = [header(OLD_SELECTION), ...INITIAL_EVENTS, ...scenario.tail]
+      .map((event, seq) => ({ ...event, seq, time: seq + 1 }))
+    const harness = await makeHarness({ events, followupSync: true })
+    try {
+      const response = await harness.request({
+        sessionId: SESSION_ID, userSeq: 5, messageId: 'old-2', messageRpcId: 'rpc-2', text: 'edited using current model',
+      })
+      assert.equal(response.status, 200)
+      assert.deepEqual(harness.appendedEvents.slice(0, 4), events.slice(0, 4), 'earlier history is preserved')
+      const selected = harness.appendedEvents.at(-1)
+      assert.equal(selected.type, 'model/selection', 'the resumed agent must receive current model intent before followup')
+      assert.deepEqual(selected.data, scenario.expected)
+      assert.equal(selected.seq, 4)
+      assert.deepEqual(harness.followed.content[1], INITIAL_EVENTS[4].data.content[1], 'attachments survive')
+    } finally {
+      await harness.cleanup()
+    }
+  })
+}
+
+test('editing the first message retains a model change made after that message', async () => {
+  const events = [...INITIAL_EVENTS, select(NEW_SELECTION)].map((event, seq) => ({ ...event, seq, time: seq + 1 }))
+  const harness = await makeHarness({ events, followupSync: true })
+  try {
+    const response = await harness.request({ sessionId: SESSION_ID, userSeq: 1, messageId: 'old-1', text: 'edited first' })
+    assert.equal(response.status, 200)
+    assert.equal(harness.appendedEvents.length, 1)
+    assert.equal(harness.appendedEvents[0].seq, 0)
+    assert.deepEqual(harness.appendedEvents[0].data, NEW_SELECTION)
+  } finally {
+    await harness.cleanup()
+  }
+})
+
+test('a failed resend restores the original log including the new model selection', async () => {
+  const events = [...INITIAL_EVENTS, select(NEW_SELECTION)].map((event, seq) => ({ ...event, seq, time: seq + 1 }))
+  const harness = await makeHarness({ events, followupFails: true })
+  try {
+    const response = await harness.request({ sessionId: SESSION_ID, userSeq: 4, text: 'edited second' })
+    assert.equal(response.status, 500)
+    assert.equal(await readFile(harness.logPath, 'utf8'), 'original-log')
+  } finally {
+    await harness.cleanup()
+  }
+})
+
+test('accepts the public HTTPS origin supplied by a reverse proxy', async () => {
+  const harness = await makeHarness()
+  try {
+    const response = await harness.request({ sessionId: SESSION_ID, userSeq: 4, text: 'edited via proxy' }, {
+      host: '127.0.0.1:59939',
+      'x-forwarded-host': 'dsh.example.com',
+      origin: 'https://dsh.example.com',
+    })
+    assert.equal(response.status, 200)
+    assert.equal(harness.followed.content[0].text, 'edited via proxy')
+  } finally {
+    await harness.cleanup()
+  }
+})
+
+test('rejects an unrelated origin without changing the log', async () => {
+  const harness = await makeHarness()
+  try {
+    const response = await harness.request({ sessionId: SESSION_ID, userSeq: 4, text: 'edited' }, {
+      host: 'dsh.example.com',
+      'x-forwarded-host': 'dsh.example.com',
+      origin: 'https://unrelated.example',
+    })
+    assert.equal(response.status, 403)
+    assert.equal(response.body.code, 'ORIGIN')
     assert.equal(harness.followed, undefined)
     assert.equal(await readFile(harness.logPath, 'utf8'), 'original-log')
   } finally {

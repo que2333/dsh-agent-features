@@ -284,6 +284,41 @@ export function apply(ctx) {
     return next
   }
 
+  /** Preserve the Session's current routing intent across a history rewind. */
+  function preserveModelSelection(prefix, sourceEvents) {
+    let pending
+    let lastHeader
+    for (const event of sourceEvents) {
+      if (event.type === 'model/selection') {
+        pending = event.data
+      } else if (event.type === 'request/header') {
+        lastHeader = event.data.header
+        const used = lastHeader.config
+        // A late request on the old route must not consume a newer choice.
+        if (pending?.provider === used.provider && pending.model === used.model &&
+            pending.reasoningEffort === used.reasoningEffort) pending = undefined
+      }
+    }
+    const selected = pending ?? lastHeader?.config
+    if (selected === undefined) return prefix
+    const data = {
+      provider: selected.provider,
+      model: selected.model,
+      ...(selected.reasoningEffort === undefined ||
+          (pending === undefined && lastHeader?.adapterDefaults?.reasoningEffort === true)
+        ? {}
+        : { reasoningEffort: selected.reasoningEffort }),
+    }
+    // Reapply only routing intent, never the discarded prompt/tool history.
+    // Logging it before Agent resume also updates the UI's durable projection.
+    return [...prefix, {
+      type: 'model/selection',
+      seq: (prefix.at(-1)?.seq ?? -1) + 1,
+      time: Date.now(),
+      data,
+    }]
+  }
+
   function optionalIdentity(value) {
     if (value === undefined) return undefined
     if (typeof value !== 'string' || value.length === 0 || value.length > 200) return null
@@ -412,7 +447,8 @@ export function apply(ctx) {
       const plan = planRewrite(current.events, userSeq, { messageId, messageRpcId })
       backups = await backupSessionDirs(id)
       await clearProjectionCache(id)
-      await writeRewoundLog(current.meta, current.inheritedEventCount, clearPendingInbox(plan.prefix))
+      const prefix = preserveModelSelection(clearPendingInbox(plan.prefix), current.events)
+      await writeRewoundLog(current.meta, current.inheritedEventCount, prefix)
 
       const found = await ctx.sessionController.resolveAgent(id)
       if (found?.error !== undefined) {
@@ -506,7 +542,7 @@ export function apply(ctx) {
     res.end(JSON.stringify(body))
   }
 
-  function originAllowed(origin) {
+  function originAllowed(origin, req) {
     if (origin === undefined) return true
     let url
     try {
@@ -515,6 +551,19 @@ export function apply(ctx) {
       return false
     }
     if (url.protocol !== 'http:' && url.protocol !== 'https:') return false
+
+    // Direct local use is reached through the webServer origin. Reverse-proxied
+    // deployments instead carry the public host in Host/X-Forwarded-Host.
+    const forwardedHost = String(req.headers['x-forwarded-host'] ?? '')
+      .split(',')[0]
+      .trim()
+    for (const host of [req.headers.host, forwardedHost]) {
+      if (typeof host !== 'string' || host.length === 0) continue
+      try {
+        if (new URL(`${url.protocol}//${host}`).host === url.host) return true
+      } catch {}
+    }
+
     const loopback =
       url.hostname === '127.0.0.1' ||
       url.hostname === 'localhost' ||
@@ -552,7 +601,7 @@ export function apply(ctx) {
     if (req.headers['x-dsh-edit-message'] !== '1') {
       return send(res, 403, { ok: false, code: 'FORBIDDEN' })
     }
-    if (!originAllowed(req.headers.origin)) return send(res, 403, { ok: false, code: 'ORIGIN' })
+    if (!originAllowed(req.headers.origin, req)) return send(res, 403, { ok: false, code: 'ORIGIN' })
     if (!String(req.headers['content-type'] ?? '').includes('application/json')) {
       return send(res, 415, { ok: false, code: 'CONTENT_TYPE' })
     }
