@@ -1,6 +1,6 @@
 {
   "name": "@que2333/dsh-agent-features",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "private": true,
   "type": "module",
   "description": "Archived chat management and in-place user message editing for DeepSeek Harness.",
@@ -50,7 +50,7 @@
     }
   },
   "dependencies": {
-    "@que2333/dsh-edit-message": "1.2.2",
+    "@que2333/dsh-edit-message": "1.2.3",
     "@que2333/dsh-session-delete": "1.1.0"
   },
   "bundleDependencies": [

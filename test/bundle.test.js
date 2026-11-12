@@ -16,7 +16,7 @@ test('the repository root is directly installable as a DSH bundle', async () => 
   }
 
   assert.equal(manifest.name, '@que2333/dsh-agent-features')
-  assert.equal(manifest.version, '1.6.1')
+  assert.equal(manifest.version, '1.7.0')
   assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(manifest.exports['./client'], undefined)
   assert.equal(manifest.exports['./agent-config'], undefined)

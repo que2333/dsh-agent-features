@@ -102,6 +102,7 @@ async function makeHarness({
   followupFails = false,
   followupSync = false,
   events = INITIAL_EVENTS,
+  modernSessionQuery = false,
 } = {}) {
   const home = await mkdtemp(path.join(tmpdir(), 'edit-message-test-'))
   const sessionsRoot = path.join(home, 'sessions')
@@ -136,21 +137,22 @@ async function makeHarness({
   }
 
   const session = { id: SESSION_ID }
+  const inspect = async () => {
+    return {
+      meta: {
+        type: 'session',
+        version: 4,
+        id: SESSION_ID,
+        createdAt: 1,
+        cwd: path.join(home, 'project'),
+        isSeeded: false,
+      },
+      inheritedEventCount: 0,
+      events,
+    }
+  }
   const sessionController = {
-    async inspect() {
-      return {
-        meta: {
-          type: 'session',
-          version: 4,
-          id: SESSION_ID,
-          createdAt: 1,
-          cwd: path.join(home, 'project'),
-          isSeeded: false,
-        },
-        inheritedEventCount: 0,
-        events,
-      }
-    },
+    ...(modernSessionQuery ? {} : { inspect }),
     async resolveAgent() {
       const agent = {
         id: SESSION_ID,
@@ -184,6 +186,22 @@ async function makeHarness({
     },
   }
 
+  const sessionQuery = modernSessionQuery
+    ? {
+        async observeSession(sessionId, options) {
+          assert.equal(sessionId, SESSION_ID)
+          assert.deepEqual(options, { projectionMode: 'none' })
+          const inspection = await inspect()
+          return {
+            header: inspection.meta,
+            inheritedEventCount: inspection.inheritedEventCount,
+            events: inspection.events,
+            [Symbol.dispose]() {},
+          }
+        },
+      }
+    : undefined
+
   const ctx = {
     registry: new Map(),
     remoteAccess: { allows: () => true },
@@ -203,6 +221,7 @@ async function makeHarness({
     },
     get(name) {
       if (name === 'sessionPersistence') return persistence
+      if (name === 'sessionQuery') return sessionQuery
       if (name === 'agents') return agents
       if (name === 'sessionProjectionCache') {
         return {
@@ -294,6 +313,26 @@ test('rewinds the containing turn and resends with the original attachment', asy
     assert.equal(harness.followed.source.kind, 'user')
     assert.equal(await readFile(harness.logPath, 'utf8'), 'rewritten-log')
     assert.ok(harness.cacheDeletes >= 1)
+  } finally {
+    await harness.cleanup()
+  }
+})
+
+test('uses the DSH 0.2.2 session query when inspect is removed', async () => {
+  const harness = await makeHarness({ modernSessionQuery: true })
+  try {
+    const response = await harness.request({
+      sessionId: SESSION_ID,
+      userSeq: 4,
+      messageId: 'old-2',
+      messageRpcId: 'rpc-2',
+      text: 'edited with session query',
+    })
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(response.body, { ok: true, sessionId: SESSION_ID })
+    assert.equal(harness.followed.content[0].text, 'edited with session query')
+    assert.equal(await readFile(harness.logPath, 'utf8'), 'rewritten-log')
   } finally {
     await harness.cleanup()
   }

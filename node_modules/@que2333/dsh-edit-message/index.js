@@ -32,12 +32,40 @@ export const inject = ['webServer', 'sessions', 'sessionController', 'remoteAcce
 export function apply(ctx) {
   const dshHome = process.env.DSH_HOME ?? path.join(homedir(), '.dsh')
   const persistence = ctx.get('sessionPersistence')
+  const sessionQuery = ctx.get('sessionQuery')
   const sessionsRoot =
     persistence !== undefined && typeof persistence.root === 'string'
       ? persistence.root
       : path.join(dshHome, 'sessions')
   const cacheRoot = path.join(dshHome, 'storages', 'session_projcache', 'sessions')
   const rewrites = new Map()
+
+  /**
+   * DSH 0.2.1 exposed sessionController.inspect(). DSH 0.2.2 moved the same
+   * behavior to an owned sessionQuery observation, so support both hosts.
+   */
+  async function inspectSession(id) {
+    if (typeof ctx.sessionController.inspect === 'function') {
+      return ctx.sessionController.inspect(id)
+    }
+    if (typeof sessionQuery?.observeSession !== 'function') {
+      throw new RewriteFailure('UNAVAILABLE', 'session query is unavailable')
+    }
+    const observation = await sessionQuery.observeSession(id, { projectionMode: 'none' })
+    try {
+      if (observation?.header?.cwd === undefined) {
+        throw new RewriteFailure('NOT_FOUND', `session "${id}" was not found`)
+      }
+      return {
+        meta: observation.header,
+        inheritedEventCount: observation.inheritedEventCount,
+        events: [...observation.events],
+      }
+    } finally {
+      const dispose = observation?.[Symbol.dispose]
+      if (typeof dispose === 'function') dispose.call(observation)
+    }
+  }
 
   async function findSessionDirs(id) {
     let projects
@@ -432,7 +460,7 @@ export function apply(ctx) {
 
     let inspected
     try {
-      inspected = await ctx.sessionController.inspect(id)
+      inspected = await inspectSession(id)
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error)
       throw new RewriteFailure('NOT_FOUND', `session "${id}" was not found: ${reason}`, { cause: error })
@@ -443,7 +471,7 @@ export function apply(ctx) {
 
     let backups = null
     try {
-      const current = await ctx.sessionController.inspect(id)
+      const current = await inspectSession(id)
       const plan = planRewrite(current.events, userSeq, { messageId, messageRpcId })
       backups = await backupSessionDirs(id)
       await clearProjectionCache(id)
